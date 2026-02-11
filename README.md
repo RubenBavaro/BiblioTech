@@ -1,22 +1,21 @@
-# BiblioTech - Digital Library System
 
-<!-- Improved compatibility of back to top link: See: https://github.com/othneildrew/Best-README-Template/pull/73 -->
+# BiblioTech - Digital Library System
 
 <a name="readme-top"></a>
 
-<!-- PROJECT LOGO-->
 <br />
 <div align="center">
-    <a href="#">
+  <a href="#">
     <img src="https://cdn-icons-png.flaticon.com/512/5442/5442126.png" alt="BiblioTech Logo" width="120" height="120">
-    </a>
-    <br>
-  <strong>A comprehensive digital library management system for school book lending</strong>
-    <br><br>
+  </a>
+  <br>
+  <strong>A secure, containerized digital library management system with TOTP authentication</strong>
+  <br><br>
 
   [![PHP](https://img.shields.io/badge/PHP-8%2B-777BB4?logo=php&logoColor=white)](https://www.php.net/)
-  [![MySQL](https://img.shields.io/badge/MySQL-MariaDB-4479A1?logo=mysql&logoColor=white)](https://www.mysql.com/)
-  [![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?logo=docker&logoColor=white)](https://www.docker.com/)
+  [![MySQL](https://img.shields.io/badge/MySQL-8.0-4479A1?logo=mysql&logoColor=white)](https://www.mysql.com/)
+  [![Docker](https://img.shields.io/badge/Docker-Containerized-2496ED?logo=docker&logoColor=white)](https://www.docker.com/)
+  [![TOTP](https://img.shields.io/badge/TOTP-RFC6238-blue)](https://datatracker.ietf.org/doc/html/rfc6238)
 </div>
 
 ---
@@ -24,85 +23,123 @@
 ## 📋 Table of Contents
 
 - [Overview](#overview)
-- [Features](#features)
+- [Core Features](#core-features)
 - [Technology Stack](#technology-stack)
+- [Architecture](#architecture)
 - [Project Structure](#project-structure)
+- [Docker Infrastructure](#docker-infrastructure)
 - [Getting Started](#getting-started)
-  - [Prerequisites](#prerequisites)
-  - [Installation](#installation)
-  - [Database Initialization](#database-initialization)
-- [Usage](#usage)
-  - [User Roles](#user-roles)
-  - [Authentication](#authentication)
-- [Security](#security)
+- [Authentication System](#authentication-system)
+- [User Roles](#user-roles)
+- [Security Measures](#security-measures)
 - [Documentation](#documentation)
 - [Future Developments](#future-developments)
 - [License](#license)
-- [Acknowledgments](#acknowledgments)
 
 ---
 
 ## 🎯 Overview
 
-BiblioTech is a web application designed to digitize the management of book lending in a school library. The system replaces traditional paper-based registries with a centralized digital solution, enabling reliable, secure, and traceable management of books and loans.
+**BiblioTech** is a web-based digital library management system designed to replace traditional paper-based lending registries in a school environment.
 
-### Key Capabilities
+The application centralizes book catalog management, inventory tracking, and loan lifecycle control in a secure and scalable infrastructure powered by Docker.
 
-- **Catalog Management**: Comprehensive book catalog with metadata
-- **Inventory Tracking**: Real-time monitoring of total and available copies
-- **Loan Lifecycle Management**: Complete workflow from checkout to return
-- **Role-Based Access Control**: Differentiated access for students and librarians
-- **Secure Authentication**: Password-based and two-factor authentication (2FAS)
+The system supports:
+
+- Structured catalog management
+- Real-time copy availability tracking
+- Role-based access control
+- Transactional loan operations
+- Two-factor authentication using TOTP (RFC 6238 compliant)
 
 ---
 
-## ✨ Features
+## ✨ Core Features
 
-- 📚 Digital book catalog with search capabilities
-- 📊 Real-time availability tracking
-- 🔄 Complete loan management workflow
-- 👥 Role-based access (Student & Librarian)
-- 🔐 Secure authentication with 2FA support
-- 🐳 Docker-based deployment for easy setup
-- 🛡️ SQL injection protection via PDO prepared statements
+- 📚 Digital book catalog with structured metadata
+- 📦 Real-time tracking of total and available copies
+- 🔄 Complete loan lifecycle management (checkout & return)
+- 👥 Role-based access control (Student & Librarian)
+- 🔐 Secure password hashing
+- 🔑 Time-based One-Time Password (TOTP) authentication
+- 🐳 Fully containerized environment
+- 🛡️ SQL Injection prevention via PDO prepared statements
+- 🔄 Transactional database operations for consistency
 
 ---
 
 ## 🛠️ Technology Stack
 
 | Technology | Purpose |
-|------------|---------|
-| **PHP 8+** | Backend logic and server-side processing |
-| **MySQL/MariaDB** | Database management system |
-| **HTML/CSS** | Frontend presentation |
-| **PDO** | Secure database access layer |
-| **2FAS** | Two-factor authentication |
-| **Docker & Docker Compose** | Containerized development environment |
+|------------|----------|
+| **PHP 8+** | Backend logic |
+| **MySQL 8.0** | Relational database |
+| **PDO** | Secure database abstraction layer |
+| **HTML/CSS** | Frontend interface |
+| **Docker & Docker Compose** | Containerized environment |
+| **2FAuth** | Self-hosted TOTP key management service |
+| **spomky-labs/otphp** | TOTP generation and verification library |
+
+---
+
+## 🏗️ Architecture
+
+BiblioTech runs in a containerized architecture composed of:
+
+- `web` → PHP + Apache application server
+- `db` → MySQL 8 database
+- `phpmyadmin` → database administration interface
+- `2fauth` → TOTP management web service
+
+All services communicate through a dedicated Docker bridge network.
+
+The 2FAuth container is used for TOTP secret management and code generation.  
+Authentication validation is performed entirely inside the BiblioTech backend.
 
 ---
 
 ## 📁 Project Structure
 
 ```
+
 BiblioTech/
 │
 ├── sql/
 │   └── bibliotech_dump.sql
 │
-├── root/ 
-│   │  
-│   ├── src/ 
-│   │   └── index.php
+├── root/
+│   ├── src/
+│   │   ├── index.php
+│   │   ├── login.php
+│   │   ├── register.php
+│   │   └── ...
 │   │
 │   ├── docker-compose.yaml
 │   └── Dockerfile
-│       
 │
 ├── docs/
 │   └── BibliotechAnalisi.docx
 │
 └── README.md
-```
+
+````
+
+---
+
+## 🐳 Docker Infrastructure
+
+The entire system is deployed using Docker Compose.
+
+### Services
+
+| Service | Description | Port |
+|----------|------------|------|
+| Application | PHP + Apache server | 9000 |
+| Database | MySQL 8.0 | Internal |
+| phpMyAdmin | Database management | 9001 |
+| 2FAuth | TOTP management interface | 9002 |
+
+The 2FAuth service uses a persistent Docker volume for `/srv/2FAuth/storage` to ensure data durability.
 
 ---
 
@@ -110,170 +147,175 @@ BiblioTech/
 
 ### Prerequisites
 
-Ensure you have the following installed on your system:
+- Docker
+- Docker Compose
+- Windows, Linux, or macOS
 
-- [Docker](https://www.docker.com/get-started) (20.10+)
-- [Docker Compose](https://docs.docker.com/compose/install/) (1.29+)
-- Compatible OS: Windows, Linux, or macOS
+---
 
-### Installation
+### 1️⃣ Navigate to the project root
 
-1. **Clone or download the repository**
+```bash
+cd path/to/BiblioTech/root
+````
 
-2. **Navigate to the root directory**
+⚠ All Docker commands must be executed from the `root/` directory.
 
-   ```bash
-   cd path/to/BiblioTech/root
-   ```
+---
 
-   ⚠️ **Important**: All Docker commands must be executed from the `root/` directory (where `docker-compose.yaml` is located).
+### 2️⃣ Start the containers
 
-3. **Start the containers**
-
-   ```bash
-   docker compose up -d
-   ```
-
-   This command will:
-   - Create and start the PHP web server container
-   - Create and start the MySQL/MariaDB database container
-   - Expose the application on the configured port
-
-4. **Verify container status**
-
-   ```bash
-   docker compose ps
-   ```
-
-   You should see both containers running.
-
-5. **Access the application**
-
-   Open your browser and navigate to:
-   ```
-   http://localhost:9000
-   ```
-
-### Database Initialization
-
-The database is initialized using the SQL dump in the `sql/` directory.
-
-To manually import the SQL file, navigate to:
-```
-http://localhost:9001
+```bash
+docker compose up -d
 ```
 
-This will open phpMyAdmin where you can import the `bibliotech_dump.sql` file.
+This will:
+
+* Build and start the PHP web server
+* Start the MySQL database
+* Launch phpMyAdmin
+* Launch 2FAuth
+* Create the internal Docker network
 
 ---
 
-## 💡 Usage
+### 3️⃣ Verify container status
 
-### User Roles
-
-BiblioTech supports two distinct user roles:
-
-#### 🎓 Student
-
-- Browse the book catalog
-- Request loans (when copies are available)
-- View personal active loans only
-
-#### 📖 Librarian
-
-- View all active loans across all users
-- Process book returns
-- Monitor copy availability and inventory
-- Manage the lending workflow
-
-> **Note**: The librarian role cannot be obtained through self-registration. Librarians must be created by an administrator or pre-loaded in the database.
-
-### Authentication
-
-The system supports multiple authentication methods:
-
-- **Password-based authentication**: Traditional username and password
-- **Passwordless authentication**: Two-factor authentication via 2FAS
+```bash
+docker compose ps
+```
 
 ---
 
-## 🔒 Security
+### 4️⃣ Access services
 
-BiblioTech implements comprehensive security measures:
-
-| Security Feature | Implementation |
-|-----------------|----------------|
-| **Password Storage** | Secure hashing algorithms |
-| **SQL Injection Prevention** | PDO prepared statements |
-| **Session Management** | Server-side session handling |
-| **Access Control** | Role-based authorization |
-| **Two-Factor Authentication** | 2FAS integration |
+| Service     | URL                                            |
+| ----------- | ---------------------------------------------- |
+| Application | [http://localhost:9000](http://localhost:9000) |
+| phpMyAdmin  | [http://localhost:9001](http://localhost:9001) |
+| 2FAuth      | [http://localhost:9002](http://localhost:9002) |
 
 ---
 
-## 📖 Documentation
-
-The `docs/` directory contains comprehensive project documentation:
-
-- **BibliotechAnalisi.docx**: System analysis and requirements
-
-This document provides detailed insights into the system architecture and design decisions.
-
----
-
-## 🔮 Future Developments
-
-Potential enhancements and features under consideration:
-
-- ⏰ Automated loan expiration management
-- 📧 Email notification system
-- 🔍 Advanced catalog search with filters
-- 🌐 RESTful API for third-party integrations
-- 📊 Administrative dashboard with analytics
-- 📱 Mobile-responsive interface improvements
-- 📚 Multi-library support
-- 🏷️ Barcode/QR code scanning for quick checkouts
-
----
-
-## 📜 License
-
-BiblioTech is developed exclusively for **educational and academic purposes**. Commercial use is not permitted.
-
----
-
-## 🙏 Acknowledgments
-
-This project acknowledges the following:
-
-- To make this readme I was inspired by the ["Best README Template"](https://github.com/othneildrew/Best-README-Template) by Othneil Drew
-- Official PHP and MySQL documentation
-- [2FAS](https://2fas.com/) and [2FAS Auth](https://2fas.com/auth/) for two-factor authentication support
-
----
-
-## 🛑 Stopping the Application
-
-To stop the development environment:
+### 5️⃣ Stop the environment
 
 ```bash
 docker compose down
 ```
 
-To stop and remove all data (including database volumes):
+To remove database volumes:
 
 ```bash
 docker compose down -v
 ```
 
-⚠️ **Note**: Execute these commands from the `root/` directory.
+---
+
+## 🔐 Authentication System
+
+BiblioTech implements a dual-layer authentication mechanism.
+
+### Password-Based Authentication
+
+* Passwords are hashed securely before storage
+* Plaintext passwords are never stored
+* Verification is performed server-side
+* Session ID is regenerated upon successful login
+
+### TOTP Authentication (RFC 6238)
+
+The system integrates **2FAuth ([https://2fauth.app/](https://2fauth.app/))** as a self-hosted TOTP management application.
+
+2FAuth is an open-source Laravel-based web application that manages TOTP secrets and generates time-based one-time passwords.
+
+Authentication flow:
+
+1. A unique `totp_secret` is generated for each user during registration.
+2. The secret is registered in 2FAuth (or any RFC 6238 compatible authenticator).
+3. The authenticator generates time-based codes.
+4. The BiblioTech backend verifies the TOTP code using the `spomky-labs/otphp` library.
+5. A ±1 time-window tolerance is applied to prevent clock drift issues.
+6. Upon successful validation, a secure session is established.
+
+⚠ Important:
+2FAuth does NOT authenticate users directly.
+It only generates TOTP codes.
+All verification logic is implemented inside the BiblioTech backend.
+
+---
+
+## 👥 User Roles
+
+### 🎓 Student
+
+* Browse book catalog
+* Request loans (if copies available)
+* View personal active loans only
+
+### 📖 Librarian
+
+* View all active loans
+* Process book returns
+* Monitor inventory
+* Manage lending operations
+
+The librarian role cannot be self-assigned and must be created by an administrator or preloaded in the database.
+
+---
+
+## 🛡️ Security Measures
+
+| Feature                     | Implementation                   |
+| --------------------------- | -------------------------------- |
+| Password Storage            | Secure hashing algorithms        |
+| SQL Injection Protection    | PDO prepared statements          |
+| Transaction Safety          | Database transactions            |
+| Session Fixation Protection | Session ID regeneration          |
+| Role Enforcement            | Server-side authorization checks |
+| TOTP Verification           | RFC 6238 compliant validation    |
+| Container Isolation         | Docker bridge network            |
+
+---
+
+## 📖 Documentation
+
+The `docs/` directory contains:
+
+* **BibliotechAnalisi.docx** – Full system analysis and design documentation
+
+It includes:
+
+* Functional requirements
+* Entity-Relationship modeling
+* UML diagrams
+* Authentication architecture
+* Security specifications
+
+---
+
+## 🔮 Future Developments
+
+* Email notifications for loan expiration
+* Advanced catalog search filters
+* Administrative analytics dashboard
+* REST API integration
+* Brute-force protection with rate limiting
+* Multi-library scalability
+* Barcode/QR code scanning support
+
+---
+
+## 📜 License
+
+BiblioTech is developed exclusively for educational and academic purposes.
+Commercial use is not permitted.
 
 ---
 
 <div align="center">
-  
-**[⬆ Back to Top](#readme-top)**
 
-Made with ❤️ for educational purposes
+**⬆ Back to Top**
+
+Secure • Containerized • Educational
 
 </div>
