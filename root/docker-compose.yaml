@@ -2,7 +2,7 @@ version: '3.9'
 
 services:
   web:
-    build: . #builda i docker file che trova nella directory
+    build: . 
     container_name: BiblioTech-SitoWebR
     ports:
       - "9000:80"
@@ -21,7 +21,7 @@ services:
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE: bibliotech
+      MYSQL_DATABASE: myapp_db
       MYSQL_USER: myuser
       MYSQL_PASSWORD: mypassword
     volumes:
@@ -39,15 +39,42 @@ services:
       PMA_HOST: db
       PMA_USER: root
       PMA_PASSWORD: rootpassword
-      UPLOAD_LIMIT: 300M
     depends_on:
       - db
     networks:
       - app-network
 
-volumes:
-  db_data:
+  # 2FAUTH 
+  2fauth:
+    image: 2fauth/2fauth #scarico l'immagine ufficiale di 2FAuth 
+    container_name: 2fauth-bibliotech #nome del container per 2FAuth
+    restart: always #riavvia automaticamente in caso di crash affinchè i codici di 2FA siano sempre disponibili
+    ports:
+      - "9002:8000"
+    environment:
+      - APP_NAME=2FAuth-Biblioteca
+      - DB_CONNECTION=mysql #{
+      - DB_HOST=db #              Indicano a 2FAuth come connetersi al container 
+      - DB_PORT=3306 #        }
+      - DB_DATABASE=myapp_db # Si può usare lo stesso DB o crearne uno nuovo
+      - DB_USERNAME=myuser #credenziali per l'accesso ai dati
+      - DB_PASSWORD=mypassword
+      # Nota: APP_KEY è necessaria per la crittografia dei dati 
+      # Si può generarla con 'php artisan key:generate' o inserire una stringa di 32 caratteri. (Io ho usato una chiave generata da Laravel)
+      - APP_KEY=base64:eDdKSm+YE0kAvZbbVtrNM/6YKRYjA1fUGo7HmSrerdM=
+      - APP_URL=http://localhost:9002 # Serve all'applicazione per generare correttamente i link interni. 
+                                      #Poiché 2FAuth "funziona ovunque" come Web App,
+                                      # ha bisogno di sapere il suo indirizzo pubblico per servire correttamente fogli di stile e script al tuo browser
+    volumes:
+      - 2fauth_data:/srv/2FAuth/storage
+    depends_on:
+      - db
+    networks:
+      - app-network 
 
+volumes:  
+  db_data:
+  2fauth_data: # Volume per i dati persistenti di 2FAuth 
 
 networks:
   app-network:
