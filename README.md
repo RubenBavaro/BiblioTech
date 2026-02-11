@@ -1,104 +1,109 @@
-
-# BiblioTech - Digital Library System
+# 📚 BiblioTech — Digital Library
 
 <a name="readme-top"></a>
 
 <br />
 <div align="center">
   <a href="#">
-    <img src="https://cdn-icons-png.flaticon.com/512/5442/5442126.png" alt="BiblioTech Logo" width="120" height="120">
+    <img src="https://cdn-icons-png.flaticon.com/512/5442/5442126.png" alt="BiblioTech Logo" width="140" height="140">
   </a>
-  <br>
-  <strong>A secure, containerized digital library management system with TOTP authentication</strong>
   <br><br>
 
-  [![PHP](https://img.shields.io/badge/PHP-8%2B-777BB4?logo=php&logoColor=white)](https://www.php.net/)
-  [![MySQL](https://img.shields.io/badge/MySQL-8.0-4479A1?logo=mysql&logoColor=white)](https://www.mysql.com/)
-  [![Docker](https://img.shields.io/badge/Docker-Containerized-2496ED?logo=docker&logoColor=white)](https://www.docker.com/)
-  [![TOTP](https://img.shields.io/badge/TOTP-RFC6238-blue)](https://datatracker.ietf.org/doc/html/rfc6238)
+  <strong>Sistema informativo digitale per la gestione dei prestiti librari scolastici</strong>
+  <br><br>
+
+  ![PHP](https://img.shields.io/badge/PHP-8%2B-777BB4?logo=php&logoColor=white)
+  ![MySQL](https://img.shields.io/badge/MySQL-8.0-4479A1?logo=mysql&logoColor=white)
+  ![Docker](https://img.shields.io/badge/Docker-Containerizzato-2496ED?logo=docker&logoColor=white)
+  ![TOTP](https://img.shields.io/badge/TOTP-RFC6238-blue)
+  ![Mailpit](https://img.shields.io/badge/Mailpit-Dev%20SMTP-orange)
 </div>
 
 ---
 
-## 📋 Table of Contents
+## 📋 Indice
 
-- [Overview](#overview)
-- [Core Features](#core-features)
-- [Technology Stack](#technology-stack)
-- [Architecture](#architecture)
-- [Project Structure](#project-structure)
-- [Docker Infrastructure](#docker-infrastructure)
-- [Getting Started](#getting-started)
-- [Authentication System](#authentication-system)
-- [User Roles](#user-roles)
-- [Security Measures](#security-measures)
-- [Documentation](#documentation)
-- [Future Developments](#future-developments)
-- [License](#license)
-
----
-
-## 🎯 Overview
-
-**BiblioTech** is a web-based digital library management system designed to replace traditional paper-based lending registries in a school environment.
-
-The application centralizes book catalog management, inventory tracking, and loan lifecycle control in a secure and scalable infrastructure powered by Docker.
-
-The system supports:
-
-- Structured catalog management
-- Real-time copy availability tracking
-- Role-based access control
-- Transactional loan operations
-- Two-factor authentication using TOTP (RFC 6238 compliant)
+- [Panoramica](#panoramica)
+- [Funzionalità Principali](#funzionalità-principali)
+- [Stack Tecnologico](#stack-tecnologico)
+- [Architettura Docker](#architettura-docker)
+- [Struttura del Progetto](#struttura-del-progetto)
+- [Avvio dell’Ambiente](#avvio-dellambiente)
+- [Sistema di Autenticazione](#sistema-di-autenticazione)
+- [Gestione Email (Mailpit)](#gestione-email-mailpit)
+- [Ruoli Utente](#ruoli-utente)
+- [Sicurezza](#sicurezza)
+- [Documentazione](#documentazione)
+- [Sviluppi Futuri](#sviluppi-futuri)
+- [Licenza](#licenza)
 
 ---
 
-## ✨ Core Features
+# 🎯 Panoramica
 
-- 📚 Digital book catalog with structured metadata
-- 📦 Real-time tracking of total and available copies
-- 🔄 Complete loan lifecycle management (checkout & return)
-- 👥 Role-based access control (Student & Librarian)
-- 🔐 Secure password hashing
-- 🔑 Time-based One-Time Password (TOTP) authentication
-- 🐳 Fully containerized environment
-- 🛡️ SQL Injection prevention via PDO prepared statements
-- 🔄 Transactional database operations for consistency
+**BiblioTech** è un sistema informativo web progettato per informatizzare la gestione dei prestiti librari in ambito scolastico.
+
+Il sistema sostituisce il registro cartaceo con una soluzione digitale centralizzata che garantisce:
+
+- Tracciabilità completa dei prestiti
+- Aggiornamento in tempo reale delle copie disponibili
+- Controllo accessi basato sui ruoli
+- Autenticazione a due fattori (TOTP)
+- Ambiente isolato e riproducibile tramite Docker
 
 ---
 
-## 🛠️ Technology Stack
+# ✨ Funzionalità Principali
 
-| Technology | Purpose |
+- 📚 Catalogo libri digitale
+- 📦 Gestione copie totali e disponibili
+- 🔄 Ciclo completo di prestito e restituzione
+- 👥 Controllo accessi basato su ruolo
+- 🔐 Autenticazione con password + TOTP (RFC 6238)
+- 📧 Reset password tramite email
+- 🐳 Infrastruttura completamente containerizzata
+- 🛡️ Protezione SQL Injection (PDO Prepared Statements)
+- 🔄 Operazioni atomiche tramite transazioni MySQL
+
+---
+
+# 🛠 Stack Tecnologico
+
+| Tecnologia | Utilizzo |
 |------------|----------|
-| **PHP 8+** | Backend logic |
-| **MySQL 8.0** | Relational database |
-| **PDO** | Secure database abstraction layer |
-| **HTML/CSS** | Frontend interface |
-| **Docker & Docker Compose** | Containerized environment |
-| **2FAuth** | Self-hosted TOTP key management service |
-| **spomky-labs/otphp** | TOTP generation and verification library |
+| **PHP 8+** | Backend applicativo |
+| **MySQL 8.0** | Database relazionale |
+| **PDO** | Accesso sicuro al database |
+| **Docker & Docker Compose** | Orchestrazione container |
+| **2FAuth** | Gestione chiavi TOTP self-hosted |
+| **spomky-labs/otphp** | Verifica codici TOTP |
+| **Mailpit** | Server SMTP di sviluppo |
 
 ---
 
-## 🏗️ Architecture
+# 🏗 Architettura Docker
 
-BiblioTech runs in a containerized architecture composed of:
+L’applicazione è composta da 5 container:
 
-- `web` → PHP + Apache application server
-- `db` → MySQL 8 database
-- `phpmyadmin` → database administration interface
-- `2fauth` → TOTP management web service
+| Servizio | Descrizione | Porta |
+|-----------|------------|-------|
+| `web` | PHP + Apache | 9000 |
+| `db` | MySQL 8.0 | interna |
+| `phpmyadmin` | Interfaccia DB | 9001 |
+| `2fauth` | Gestione TOTP | 9002 |
+| `mailpit` | SMTP di sviluppo | 8025 |
 
-All services communicate through a dedicated Docker bridge network.
+Tutti i servizi comunicano tramite la rete Docker:
 
-The 2FAuth container is used for TOTP secret management and code generation.  
-Authentication validation is performed entirely inside the BiblioTech backend.
+```
+
+bibliotech-network
+
+```
 
 ---
 
-## 📁 Project Structure
+# 📁 Struttura del Progetto
 
 ```
 
@@ -126,60 +131,36 @@ BiblioTech/
 
 ---
 
-## 🐳 Docker Infrastructure
+# 🚀 Avvio dell’Ambiente
 
-The entire system is deployed using Docker Compose.
-
-### Services
-
-| Service | Description | Port |
-|----------|------------|------|
-| Application | PHP + Apache server | 9000 |
-| Database | MySQL 8.0 | Internal |
-| phpMyAdmin | Database management | 9001 |
-| 2FAuth | TOTP management interface | 9002 |
-
-The 2FAuth service uses a persistent Docker volume for `/srv/2FAuth/storage` to ensure data durability.
-
----
-
-## 🚀 Getting Started
-
-### Prerequisites
-
-- Docker
-- Docker Compose
-- Windows, Linux, or macOS
-
----
-
-### 1️⃣ Navigate to the project root
+## 1️⃣ Posizionarsi nella directory root
 
 ```bash
 cd path/to/BiblioTech/root
 ````
 
-⚠ All Docker commands must be executed from the `root/` directory.
+⚠️ I comandi Docker devono essere eseguiti nella cartella `root`.
 
 ---
 
-### 2️⃣ Start the containers
+## 2️⃣ Avviare i container
 
 ```bash
-docker compose up -d
+docker compose up --build -d
 ```
 
-This will:
+Questo comando:
 
-* Build and start the PHP web server
-* Start the MySQL database
-* Launch phpMyAdmin
-* Launch 2FAuth
-* Create the internal Docker network
+* Costruisce l’immagine PHP
+* Avvia MySQL
+* Avvia phpMyAdmin
+* Avvia 2FAuth
+* Avvia Mailpit
+* Crea la rete interna Docker
 
 ---
 
-### 3️⃣ Verify container status
+## 3️⃣ Verifica stato
 
 ```bash
 docker compose ps
@@ -187,23 +168,24 @@ docker compose ps
 
 ---
 
-### 4️⃣ Access services
+## 4️⃣ Accesso ai servizi
 
-| Service     | URL                                            |
-| ----------- | ---------------------------------------------- |
-| Application | [http://localhost:9000](http://localhost:9000) |
-| phpMyAdmin  | [http://localhost:9001](http://localhost:9001) |
-| 2FAuth      | [http://localhost:9002](http://localhost:9002) |
+| Servizio     | URL                                            |
+| ------------ | ---------------------------------------------- |
+| Applicazione | [http://localhost:9000](http://localhost:9000) |
+| phpMyAdmin   | [http://localhost:9001](http://localhost:9001) |
+| 2FAuth       | [http://localhost:9002](http://localhost:9002) |
+| Mailpit      | [http://localhost:8025](http://localhost:8025) |
 
 ---
 
-### 5️⃣ Stop the environment
+## 5️⃣ Arrestare ambiente
 
 ```bash
 docker compose down
 ```
 
-To remove database volumes:
+Per rimuovere anche il database:
 
 ```bash
 docker compose down -v
@@ -211,111 +193,134 @@ docker compose down -v
 
 ---
 
-## 🔐 Authentication System
+# 🔐 Sistema di Autenticazione
 
-BiblioTech implements a dual-layer authentication mechanism.
+BiblioTech implementa autenticazione **a due fattori obbligatoria**.
 
-### Password-Based Authentication
+## Primo fattore — Password
 
-* Passwords are hashed securely before storage
-* Plaintext passwords are never stored
-* Verification is performed server-side
-* Session ID is regenerated upon successful login
+* Password hashata
+* Mai salvata in chiaro
+* Verifica server-side
+* Rigenerazione ID sessione
 
-### TOTP Authentication (RFC 6238)
+## Secondo fattore — TOTP (RFC 6238)
 
-The system integrates **2FAuth ([https://2fauth.app/](https://2fauth.app/))** as a self-hosted TOTP management application.
+Il sistema utilizza:
 
-2FAuth is an open-source Laravel-based web application that manages TOTP secrets and generates time-based one-time passwords.
+👉 [https://2fauth.app/](https://2fauth.app/)
 
-Authentication flow:
+2FAuth è un'applicazione Laravel self-hosted che:
 
-1. A unique `totp_secret` is generated for each user during registration.
-2. The secret is registered in 2FAuth (or any RFC 6238 compatible authenticator).
-3. The authenticator generates time-based codes.
-4. The BiblioTech backend verifies the TOTP code using the `spomky-labs/otphp` library.
-5. A ±1 time-window tolerance is applied to prevent clock drift issues.
-6. Upon successful validation, a secure session is established.
+* Gestisce chiavi TOTP
+* Genera codici temporanei
+* NON autentica direttamente l’utente
 
-⚠ Important:
-2FAuth does NOT authenticate users directly.
-It only generates TOTP codes.
-All verification logic is implemented inside the BiblioTech backend.
+Flusso:
 
----
+1. Generazione `totp_secret`
+2. Registrazione in 2FAuth
+3. Generazione codice TOTP
+4. Verifica backend tramite `otphp`
+5. Tolleranza ±1 intervallo temporale
+6. Creazione sessione sicura
 
-## 👥 User Roles
-
-### 🎓 Student
-
-* Browse book catalog
-* Request loans (if copies available)
-* View personal active loans only
-
-### 📖 Librarian
-
-* View all active loans
-* Process book returns
-* Monitor inventory
-* Manage lending operations
-
-The librarian role cannot be self-assigned and must be created by an administrator or preloaded in the database.
+⚠️ L’accesso è consentito SOLO se entrambi i fattori sono validi.
 
 ---
 
-## 🛡️ Security Measures
+# 📧 Gestione Email (Mailpit)
 
-| Feature                     | Implementation                   |
-| --------------------------- | -------------------------------- |
-| Password Storage            | Secure hashing algorithms        |
-| SQL Injection Protection    | PDO prepared statements          |
-| Transaction Safety          | Database transactions            |
-| Session Fixation Protection | Session ID regeneration          |
-| Role Enforcement            | Server-side authorization checks |
-| TOTP Verification           | RFC 6238 compliant validation    |
-| Container Isolation         | Docker bridge network            |
+Mailpit è un server SMTP di sviluppo.
 
----
+Funzionamento:
 
-## 📖 Documentation
+* PHP invia email tramite `msmtp`
+* Email inoltrate a `mailpit:1025`
+* Mailpit intercetta i messaggi
+* Visualizzazione su [http://localhost:8025](http://localhost:8025)
 
-The `docs/` directory contains:
+Utilizzo principale:
 
-* **BibliotechAnalisi.docx** – Full system analysis and design documentation
+* Reset password
+* Test notifiche
+* Verifica header email
+* Debug contenuti HTML
 
-It includes:
-
-* Functional requirements
-* Entity-Relationship modeling
-* UML diagrams
-* Authentication architecture
-* Security specifications
+⚠️ Nessuna email reale viene inviata.
 
 ---
 
-## 🔮 Future Developments
+# 👥 Ruoli Utente
 
-* Email notifications for loan expiration
-* Advanced catalog search filters
-* Administrative analytics dashboard
-* REST API integration
-* Brute-force protection with rate limiting
-* Multi-library scalability
-* Barcode/QR code scanning support
+## 🎓 Studente
+
+* Visualizza catalogo
+* Effettua prestiti
+* Visualizza solo i propri prestiti
+
+## 📖 Bibliotecario
+
+* Visualizza tutti i prestiti
+* Registra restituzioni
+* Monitora disponibilità
+
+Il ruolo bibliotecario:
+
+* NON può essere auto-assegnato
+* Deve essere creato manualmente o precaricato
 
 ---
 
-## 📜 License
+# 🛡 Sicurezza
 
-BiblioTech is developed exclusively for educational and academic purposes.
-Commercial use is not permitted.
+| Misura           | Implementazione     |
+| ---------------- | ------------------- |
+| Hash Password    | Algoritmo sicuro    |
+| SQL Injection    | Prepared Statements |
+| Session Fixation | Rigenerazione ID    |
+| 2FA              | RFC 6238            |
+| Reset Sicuro     | Token temporaneo    |
+| Isolamento       | Docker network      |
+| Consistenza      | Transazioni MySQL   |
+
+---
+
+# 📖 Documentazione
+
+Cartella `docs/` contiene:
+
+* Analisi completa
+* Diagramma ER
+* UML
+* Specifiche sicurezza
+* Architettura autenticazione
+
+---
+
+# 🔮 Sviluppi Futuri
+
+* Notifiche scadenza prestiti
+* Rate limiting login
+* Dashboard amministrativa
+* API REST
+* Ricerca avanzata
+* Multi-sede
+* Integrazione QR / Barcode
+
+---
+
+# 📜 Licenza
+
+Progetto sviluppato per finalità didattiche.
 
 ---
 
 <div align="center">
 
-**⬆ Back to Top**
+**⬆ Torna all’inizio**
 
-Secure • Containerized • Educational
+Sistema Sicuro • Containerizzato • Didattico
 
 </div>
+
