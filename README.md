@@ -234,7 +234,7 @@ BiblioTech/
 │       └── set_theme.php          # Toggle tema chiaro/scuro
 │
 ├── 📁 sql/                         # Database
-│   └── bibliotech_dump.sql        # Dump completo con dati di test
+│   └── bibliotech.sql              # Dump completo con dati di test
 │
 └── 📁 docs/                        # Documentazione
     └── BibliotechAnalisi.docx     # Analisi completa del progetto
