@@ -86,6 +86,11 @@ services:
       - "1025:1025"   # SMTP
     networks:
       - app-network
+    environment:
+      - APACHE_DOCUMENT_ROOT=/var/www/html
+      - SMTP_HOST=mailpit
+      - SMTP_PORT=1025
+
 
 
 volumes:

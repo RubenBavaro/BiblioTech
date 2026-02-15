@@ -1,60 +1,61 @@
 <?php
-require 'vendor/autoload.php';
 
-use OTPHP\TOTP;
+if (isset($_COOKIE['logged_in']) && $_COOKIE['logged_in'] === "1") {
+    header("Location: homepage.php");
+    exit;
+}
 
-// Crea una nuova chiave segreta per l'utente
-$totp = TOTP::create();
-$secret = $totp->getSecret();
+include 'header.php';
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registrati</title>
-    <link rel="stylesheet" href="index.css">
-</head>
-<body>
-    <h1>Registrati</h1>
-
-    <div class="container">
-        <!-- Colonna sinistra: istruzioni -->
-        <div class="col istruzioni">
-            <h3>Istruzioni per la registrazione</h3>
-            <p>
-                Inserisci correttamente tutti i campi obbligatori.<br><br>
-                La chiave TOTP verrà usata per proteggere il tuo account,<br>
-                copiala e inseriscila in un'app di autenticazione (es. Google Authenticator o quella offerta da noi) per generare i codici di accesso.<br>
-                Al termine della registrazione dovrai accedere al tuo accountinserendo username, password e il codice TOTP generato dall'app.<br><br>\  
-                Dopo la registrazione potrai usare il tuo account per accedere in sicurezza.
+<div class="container text-center mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            
+            <h1 class="display-4 mb-4">📚 Benvenuto su BiblioTech</h1>
+            
+            <p class="lead mb-4">
+                Sistema digitale di gestione prestiti librari scolastici
             </p>
-        </div>
 
-        <!-- Colonna destra: form -->
-        <div class="col form-container">
-            <form action="login.php" method="post">
-                <label for="nome">Nome:</label>
-                <input type="text" id="nome" name="nome" required>
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Funzionalità Principali</h5>
+                    <div class="row mt-3">
+                        <div class="col-md-4 mb-3">
+                            <div class="p-3">
+                                <h6>📖 Catalogo Libri</h6>
+                                <small class="text-muted">Consulta tutti i libri disponibili</small>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="p-3">
+                                <h6>🔄 Prestiti</h6>
+                                <small class="text-muted">Gestisci i tuoi prestiti attivi</small>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="p-3">
+                                <h6>🔐 Autenticazione 2FA</h6>
+                                <small class="text-muted">Sicurezza con TOTP</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-                <label for="cognome">Cognome:</label>
-                <input type="text" id="cognome" name="cognome" required>
+            <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                <a href="login.php" class="btn btn-primary btn-lg px-5">
+                    Accedi
+                </a>
+                <a href="register.php" class="btn btn-outline-secondary btn-lg px-5">
+                    Registrati
+                </a>
+            </div>
 
-                <label for="username">Username:</label>
-                <input type="text" id="username" name="username" required>
-
-                <label for="password">Password:</label>
-                <input type="password" id="password" name="password" required>
-
-                <label for="codice">Chiave TOTP (readonly):</label>
-                <input type="text" id="codice" name="secret" value="<?php echo htmlspecialchars($secret); ?>" readonly>
-
-                <input type="submit" value="Registrati">
-            </form>
-
-            <h2>Se disponi di un account, <a href="login.php">Accedi</a></h2>
         </div>
     </div>
+</div>
+
 </body>
 </html>
