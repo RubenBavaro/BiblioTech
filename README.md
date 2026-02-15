@@ -167,7 +167,7 @@ Questo comando:
 **Opzione A - Da riga di comando (consigliata):**
 
 ```bash
-docker exec -i BiblioTech-DataBaseR mysql -uroot -prootpassword biblioTech < ../sql/bibliotech_dump.sql
+docker exec -i BiblioTech-DataBaseR mysql -uroot -prootpassword biblioTech < ../sql/bibliotech.sql
 ```
 
 **Opzione B - Via phpMyAdmin:**
@@ -178,7 +178,7 @@ docker exec -i BiblioTech-DataBaseR mysql -uroot -prootpassword biblioTech < ../
    - **Password**: `rootpassword`
 3. Seleziona database `biblioTech`
 4. Vai su tab "Importa"
-5. Carica file `sql/bibliotech_dump.sql`
+5. Carica file `sql/bibliotech.sql`
 6. Clicca "Esegui"
 
 ### 4. Verifica Installazione
@@ -252,48 +252,6 @@ BiblioTech/
 | **phpMyAdmin** | http://localhost:9001 | `root` / `rootpassword` |
 | **2FAuth** | http://localhost:9002 | Registrazione libera |
 | **Mailpit** | http://localhost:8025 | Nessuna (accesso diretto) |
-
-### Utenti di Test
-
-Il database include utenti pre-configurati con:
-- **Password**: `password123` (per tutti)
-- **TOTP Secret**: `JBSWY3DPEHPK3PXP` (per test 2FA)
-
-#### 👨‍🎓 Studenti
-
-**Mario Rossi**
-- Email: `mario.rossi@student.bibliotech.it`
-- Ruolo: Studente
-- Password: `password123`
-- TOTP: `JBSWY3DPEHPK3PXP`
-
-**Luigi Verdi**
-- Email: `luigi.verdi@student.bibliotech.it`
-- Ruolo: Studente
-- Password: `password123`
-- TOTP: `JBSWY3DPEHPK3PXP`
-
-#### 👨‍🏫 Bibliotecario
-
-**Anna Bianchi**
-- Email: `anna.bianchi@bibliotecario.bibliotech.it`
-- Ruolo: Bibliotecario
-- Password: `password123`
-- TOTP: `JBSWY3DPEHPK3PXP`
-
-### Dati di Test
-
-Il database contiene 10 libri di esempio:
-- Il Signore degli Anelli (5 copie)
-- 1984 (3 copie)
-- Il Nome della Rosa (4 copie)
-- Harry Potter e la Pietra Filosofale (6 copie)
-- Orgoglio e Pregiudizio (3 copie)
-- Il Piccolo Principe (5 copie)
-- La Divina Commedia (4 copie)
-- I Promessi Sposi (5 copie)
-- Il Codice da Vinci (3 copie)
-- Cronache del Ghiaccio e del Fuoco (4 copie)
 
 ---
 
